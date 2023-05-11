@@ -1,0 +1,13 @@
+# Config changes format version 1.0
+# created by u-center version 22.07 at 15:01:16 on Tuesday, 04 Apr 2023
+[del]
+[set]
+Flash CFG-SIGNAL-BDS_ENA   0                    # write value 0                    to item id 0x10310022 in layer 2
+Flash CFG-SIGNAL-GLO_ENA   0                    # write value 0                    to item id 0x10310025 in layer 2
+Flash CFG-MSGOUT-UBX_NAV_SVIN_USB 0x1                  # write value 1  0x1               to item id 0x2091008b in laye
+Flash CFG-MSGOUT-UBX_NAV_STATUS_USB 0x1                  # write value 1  0x1               to item id 0x2091001d in la
+Flash CFG-MSGOUT-UBX_NAV_HPPOSLLH_USB 0x1                  # write value 1  0x1               to item id 0x20910036 in 
+Flash CFG-RATE-MEAS        0x3e8                # write value 1000  0x3e8          to item id 0x30210001 in layer 2
+Flash CFG-TMODE-MODE       1                    # write value 1 - SURVEY_IN        to item id 0x20030001 in layer 2
+Flash CFG-TMODE-SVIN_MIN_DUR 0x3c                 # write value 60  0x3c             to item id 0x40030010 in layer 2
+Flash CFG-TMODE-SVIN_ACC_LIMIT 0x4e20               # write value 20000  0x4e20        to item id 0x40030011 in layer 2

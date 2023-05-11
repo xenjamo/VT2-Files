@@ -1,0 +1,21 @@
+improve on previous system and integrate onto ZHAW Hardware
+
+-Base verbessere
+	-antenne platzierig
+	-tripod
+	-strom
+	-funkmodul (besseri leistig und über UART)
+	-survey-in alternative sueche (selber mache)
+	-für survey-in vilicht baro date neh zum vertikali errors uusgliiche
+	-SW imporvements
+
+-rover verbessere
+	-rtos (lüt a de ZHAW frage)
+	-badness detector (system wo mer weis wie guet das mer de GPS date chan traue(ardupilot))
+	-integartion IMU und fusion (michi chan helfe)
+	-implementation Kompass
+	-EKF
+	+-------------------------+
+	-Controller?
+	-Downlink für remote stüürig?
+	-closedloop?
