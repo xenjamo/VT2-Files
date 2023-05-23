@@ -1,0 +1,23 @@
+# Config changes format version 1.0
+# created by u-center version 22.07 at 13:36:06 on Monday, 22 May 2023
+[del]
+[set]
+Flash CFG-SIGNAL-BDS_ENA   0                    # write value 0                    to item id 0x10310022 in layer 2
+Flash CFG-SIGNAL-GLO_ENA   0                    # write value 0                    to item id 0x10310025 in layer 2
+Flash CFG-MSGOUT-UBX_NAV_STATUS_USB 0x1                  # write value 1  0x1               to item id 0x2091001d in la
+Flash CFG-MSGOUT-UBX_NAV_HPPOSLLH_USB 0x1                  # write value 1  0x1               to item id 0x20910036 in 
+Flash CFG-UART1OUTPROT-RTCM3X 0                    # write value 0                    to item id 0x10740004 in layer 2
+Flash CFG-UART1OUTPROT-NMEA 0                    # write value 0                    to item id 0x10740002 in layer 2
+Flash CFG-UART2-BAUDRATE   0xe100               # write value 57600  0xe100        to item id 0x40530001 in layer 2
+Flash CFG-MSGOUT-UBX_NAV_TIMEUTC_UART1 0x1                  # write value 1  0x1               to item id 0x2091005c in
+Flash CFG-SIGNAL-QZSS_ENA  0                    # write value 0                    to item id 0x10310024 in layer 2
+Flash CFG-MSGOUT-UBX_NAV_STATUS_UART1 0x1                  # write value 1  0x1               to item id 0x2091001b in 
+Flash CFG-MSGOUT-UBX_NAV_PVT_UART1 0x1                  # write value 1  0x1               to item id 0x20910007 in lay
+Flash CFG-MSGOUT-UBX_NAV_HPPOSLLH_UART1 0x1                  # write value 1  0x1               to item id 0x20910034 i
+Flash CFG-MSGOUT-UBX_NAV_RELPOSNED_UART1 0x1                  # write value 1  0x1               to item id 0x2091008e 
+Flash CFG-MSGOUT-UBX_NAV_COV_UART1 0x1                  # write value 1  0x1               to item id 0x20910084 in lay
+Flash CFG-MSGOUT-UBX_NAV_DOP_UART1 0x1                  # write value 1  0x1               to item id 0x20910039 in lay
+Flash CFG-NAVSPG-FIXMODE   2                    # write value 2 - 3DONLY           to item id 0x20110011 in layer 2
+Flash CFG-NAVSPG-DYNMODEL  7                    # write value 7 - AIR2             to item id 0x20110021 in layer 2
+Flash CFG-NAVSPG-UTCSTANDARD 5                    # write value 5 - EU               to item id 0x2011001c in layer 2
+Flash CFG-RATE-MEAS        0x64                 # write value 100  0x64            to item id 0x30210001 in layer 2
