@@ -1,4 +1,5 @@
 clear all, clc, close all
+
 %% read file
 fid = fopen('003.bin');
 M = []; % initalize array
@@ -18,13 +19,14 @@ while 1
     if size(M_) < 68                
         break;                      
     end
-    M = [M;M_];                     % write array to matrix
+    % M = [M;M_];                     % write array to matrix
     A = [A;A_];
     A2 = [A2;A2_];
     B = [B;B_];
     C = [C;C_];
     D = [D;bitget(D_,8:-1:1)];
 end
+M = [A,A2,B,C,D];
 
 fclose(fid);                        % close file
 
@@ -36,6 +38,9 @@ t = B(:,1)/1000000;
 dt = [0;diff(t)];
 dn = [0;diff(n)];
 t = t-t(1);
+t0 = 6;
+tend = 303.5;
+
 itow = B(:,3);
 ditow = [0;diff(itow)];
 ttff = B(1,4);
@@ -57,7 +62,6 @@ A_mag = [0.9858873,  0.0000000,  0.0000000;
          0.0572703,  0.0053311,  1.0284045];
 b_mag = [0.4574184, -0.3294953,  0.3824048]';
 mag_calib = (mag - b_mag.')*A_mag.';
-
 
 quat = A(:,10:13);
 rpy = A(:,14:16);
@@ -93,10 +97,15 @@ relvelNEU = [A(:,49), A(:,50), -A(:,51)];
 
 sAcc = A(:,52);
 gSpeed = A(:,53);
-heading = A(:,54)*pi/180;
+headMot = A(:,54)*pi/180;
 
+hpllh = A2(:,1:3);
 
-
+save data.mat n t itow ttff msss rtk_flags...
+     gnss_fix fix_type numSV lastCorrectionAge...
+     gyro accel mag mag_calib quat rpy K_pos K_vel...
+     DOP relposNEU relaccNEU hMSL hAcc vAcc llh...
+     relvelNEU sAcc gSpeed headMot hpllh
 
 %% plots
 
@@ -137,68 +146,148 @@ plot(t,dmsss);
 title("dt RTC time")
 grid on;
 
-
+%%
 figure(1);
 plot(t,gyro);
 title("gyro")
+xlim([t0, tend])
 grid on;
 
 figure(2);
 plot(t,accel);
 title("accel")
+xlim([t0, tend])
 grid on;
 
 figure(3);
 subplot(211)
 plot(t,mag);
 title("mag")
+xlim([t0, tend])
 grid on;
 subplot(212);
 plot(t,mag_calib);
 title("mag calib")
+xlim([t0, tend])
 grid on;
 
-
+% carefull here
+% Tmean = 6.0;
+% ind0 = t > 1 & t < Tmean;
+% mag0 = median(mag_calib(ind0)).';
+% Ymag0 = atan2(mag_calib(ind0, 2), mag_calib(ind0, 1));
+% Ymag0 = median(Ymag0);
+% Ymag = atan2(mag_calib(:, 2), mag_calib(:,1));
+% Ymag = atan2(sin(Ymag - Ymag0), cos(Ymag - Ymag0)); % unwrap(Ymag - Ymag0);
+% figure(33)
+% plot(t, unwrap([Ymag, heading])), grid on
 
 figure(5);
 plot(t,rpy);
 title("rpy")
+xlim([t0, tend])
 grid on;
-
-
-figure(234);
-plot(t,DOP);
-title("DOP")
-legend(["gDOP" "pDOP" "tDOP" "vDOP" "hDOP" "nDOP" "eDOP"], "location", "northwest")
-grid on;
-
-figure(2674);
-plot3(relposNEU(:,2),relposNEU(:,1),relposNEU(:,3), '.');
+%%
+figure(7);
+plot3(relposNEU(:,2),relposNEU(:,1),relposNEU(:,3), '.-');
 title("RELPOS")
 grid on;
 
-figure(2675);
+figure(8);
+subplot(311);
+plot(t, relposNEU(:,1))
+title("relposN");
+xlim([t0 tend])
+grid on;
+subplot(312);
+plot(t, relposNEU(:,2))
+title("relposE");
+xlim([t0 tend])
+grid on;
+subplot(313);
+plot(t, relposNEU(:,3))
+title("relposU");
+xlim([t0 tend])
+grid on;
+
+% figure(9);
+% plot3(relvelNEU(:,2),relvelNEU(:,1),relvelNEU(:,3), '.');
+% title("RELVEL")
+% grid on;
+
+figure(9);
 plot3(relvelNEU(:,2),relvelNEU(:,1),relvelNEU(:,3), '.');
 title("RELVEL")
 grid on;
 
+figure(99)
+subplot(211)
+plot(t, heading), grid on
+subplot(212)
+plot(t, gSpeed), grid on, hold on
+gSpeed_test = sqrt( relvelNEU(:,1).^2 + relvelNEU(:,2).^2 );
+plot(t, gSpeed_test), hold off
+
+figure(10);
+subplot(311);
+plot(t, relvelNEU(:,1))
+title("relvelN");
+xlim([t0 tend])
+grid on;
+subplot(312);
+plot(t, relvelNEU(:,2))
+title("relvelE");
+xlim([t0 tend])
+grid on;
+subplot(313);
+plot(t, relvelNEU(:,3))
+title("relvelU");
+xlim([t0 tend])
+grid on;
+
+
+%%
+figure(234);
+plot(t,DOP);
+title("DOP")
+legend(["gDOP" "pDOP" "tDOP" "vDOP" "hDOP" "nDOP" "eDOP"], "location", "northwest")
+xlim([t0 tend])
+grid on;
+
+figure(124);
+plot(t, K_pos);
+title("Covariance Position")
+grid on
+legend(["NN" "NE" "ND" "EE" "ED" "DD"], 'location', 'best');
+xlim([t0 tend])
+
 figure(46);
 plot(t,relaccNEU);
 title("RELacc")
-
-
-figure(84)
-plot3(A2(:,1), A2(:,2), A2(:,3), '.');
-title("hpposllh")
-
-figure(420)
-polarplot(heading,gSpeed,'.')
-title("Ground Speed")
+xlim([t0 tend])
 grid on;
 
+%%
+figure(84)
+plot(hpllh(:,1), hpllh(:,2), '.');
+hold on
+plot(llh(:,1), llh(:,2), '.');
+hold off
+title("hpposllh")
+grid on;
+
+figure(420)
+% polarplot(heading, gSpeed,'.')
+plot(t, heading)
+title("Ground Speed")
+grid on;
+%%
 figure(456);
 plot(t,D-[0 2 4 6 8 10 12 14])
 ylim([-14 1])
 legend(["invaldLLH" "RTK Fix" "RTK float" "diff available" "velCov valid" "posCov valid" "svin valid" "time mode"], "location", "southeast")
 title("status")
+xlim([t0 tend])
 grid on;
+
+
