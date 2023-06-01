@@ -1,8 +1,9 @@
 clc, clear variables
-%%
+
+%% 
 load data.mat
 
-data = [gyro, accel, mag_calib, t, quat, rpy];
+data = [gyro, accel, mag_calib, t, quat, rpy, headMot];
 
 time = data(:,10);
 time = time - time(1);
@@ -12,7 +13,25 @@ ind_acc  = 4:6;
 ind_mag  = 7:9;
 ind_quat = 11:14;
 ind_rpy  = 15:17;
+ind_headMot = 18;
 
+%% 
+Tmean = 2.0; % ???
+ind_avg = time > 1 & time < Tmean;
+mag0 = median(data(ind_avg,ind_mag)).';
+
+yaw_mag0 = median( atan2(data(ind_avg,ind_mag(2)), data(ind_avg,ind_mag(1))) );
+
+yaw_mag = atan2(data(:,ind_mag(2)), data(:,ind_mag(1)));
+yaw_mag = wrapTo2Pi(yaw_mag - yaw_mag0);
+
+figure(839)
+plot(time, [yaw_mag,data(:,ind_headMot)] * 180/pi)
+grid on;
+
+% R = Rz(psi0)^T * Rz(psi)*Ry(theta)*Rx(phi)
+
+%%
 figure(1)
 plot(diff(time)), grid on
 
@@ -93,12 +112,27 @@ linkaxes(ax, 'x'), clear ax, xlim([0, max(time)])
 % plot(time, quat_), grid on
 % ylabel('Quaternion'), xlabel('Time (sec)')
 
+
+%%
 figure(7)
-subplot(211);
-plot(time, unwrap(headMot *));
-grid on;
-ylabel("head Mot (deg)");
-subplot(212);
-plot(time, unwrap(angleFun(rpyRPY(:,ang_ind)) * 180/pi));
+subplot(211)
+plot(time, -unwrap(headMot) * 180/pi);
+hold on;
+plot(time, unwrap(rpyRPY(:,ang_ind)) * 180/pi);
+hold off;
 ylabel("yaw (deg)");
+grid on;
+
+
+gSpeed_acc = sqrt(sqrt(K_vel(:,1).^2 + K_vel(:,4).^2));
+headAcc = gSpeed_acc./gSpeed; %dangerous may result in diffby0
+headAcc = min(max(headAcc,0),pi);
+
+subplot(413);
+plot(time, headAcc*180/pi);
+grid on;
+ylabel("headAcc")
+subplot(414)
+plot(time,gSpeed)
+ylabel("gSpeed")
 grid on;

@@ -3,6 +3,7 @@ clear all; clc
 load data.mat;
 
 data = [gyro, accel, mag_calib, t, quat, rpy];
+[m,n] = size(t);
 
 time = data(:,10);
 time = time - time(1);
@@ -30,3 +31,22 @@ rpyRPY = quat2rpy(quatRPY);
 
 angleFun = @wrapToPi;
 
+%% transformation matrix
+
+CBE = rotmat(quaternion(quatRPY),'frame');
+CEB = rotmat(quaternion(quatRPY),'point');
+accelBE = zeros(m,3);
+
+for i = 1:m
+    accelBE(i,:) = accel(i,:)*CBE(:,:,i);
+end
+
+figure(1)
+subplot(211)
+plot(time, accel)
+grid on;
+ylabel("accel body frame")
+subplot(212)
+plot(time, accelBE)
+grid on;
+ylabel("accel world frame")
