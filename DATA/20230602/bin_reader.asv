@@ -6,9 +6,9 @@ clear all, clc, close all
 % filename = '004.bin'; % walking around
 % filename = '005.bin'; % broken
 % filename = '006.bin'; % broken
-% filename = '007.bin'; % X motion with stops
+filename = '007.bin'; % X motion with stops
 % filename = '008.bin'; % running around
-filename = '009.bin'; % disabling RTK stationary (mostly)
+% filename = '009.bin'; % disabling RTK stationary (mostly)
 % filename = '010.bin'; % disabling RTK moving (moving to force RTK loss)
 
 %% read file
@@ -189,7 +189,7 @@ grid on;
 Ymag = atan2(mag(:,2), mag(:,1));
 % Ymag = atan2(sin(Ymag - Ymag0), cos(Ymag - Ymag0)); % unwrap(Ymag - Ymag0);
 figure(33)
-plot(t, [Ymag, headMot]), grid on
+% plot(t, unwrap([Ymag, heading])), grid on
 
 figure(5);
 plot(t,rpy);
@@ -198,7 +198,7 @@ xlim([t0, tend])
 grid on;
 %%
 figure(7);
-plot(relposNEU(:,2),relposNEU(:,1), '.-');
+plot3(relposNEU(:,2),relposNEU(:,1),relposNEU(:,3), '.-');
 title("RELPOS")
 grid on;
 
@@ -229,13 +229,13 @@ plot3(relvelNED(:,2),relvelNED(:,1),relvelNED(:,3), '.');
 title("RELVEL")
 grid on;
 
-figure(90)
+figure(99)
 subplot(211)
 plot(t, headMot); grid on
 subplot(212)
 plot(t, gSpeed); grid on
 
-figure(901)
+figure(990)
 subplot(211)
 plot(t, headAcc); grid on
 subplot(212)
@@ -261,50 +261,39 @@ grid on;
 
 
 %%
-figure(11);
+figure(234);
 plot(t,DOP);
 title("DOP")
 legend(["gDOP" "pDOP" "tDOP" "vDOP" "hDOP" "nDOP" "eDOP"], "location", "northwest")
 xlim([t0 tend])
 grid on;
 
-figure(12);
+figure(124);
 plot(t, K_pos);
 title("Covariance Position")
 grid on
 legend(["NN" "NE" "ND" "EE" "ED" "DD"], 'location', 'best');
 xlim([t0 tend])
 
-figure(13);
+figure(46);
 plot(t,hAcc);
 title("hAcc")
 xlim([t0 tend])
 grid on;
 
 %%
-figure(14)
+figure(84)
 plot(hpllh(:,1), hpllh(:,2), '.');
 title("hpposllh")
 grid on;
 
-figure(140);
-subplot(311);
-plot(t,hpllh(:,1)); grid on;
-ylabel('lon');
-subplot(312);
-plot(t,hpllh(:,2)); grid on;
-ylabel('lat');
-subplot(313)
-plot(t,hAcc);
-
-
-figure(15)
+figure(420)
 % polarplot(heading, gSpeed,'.')
 plot(t, headMot)
 title("Ground Speed")
 grid on;
 %%
-figure(16);
+figure(456);
 plot(t,D-[0 2 4 6 8 10 12 14])
 ylim([-14 1])
 legend(["invaldLLH" "RTK Fix" "RTK float" "diff available" "velCov valid" "posCov valid" "svin valid" "time mode"], "location", "southeast")

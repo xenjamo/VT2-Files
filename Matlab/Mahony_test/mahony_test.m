@@ -1,9 +1,10 @@
 clc, clear variables
 
 %% 
-load data.mat
+load data_20230602.mat % crossmotion headMot =/= Yaw
+% load data_20230526.mat % mostly forward flight (w/o headAcc)
 
-data = [gyro, accel, mag_calib, t, quat, rpy, headMot];
+data = [gyro, accel, mag, t, quat, rpy, headMot];
 
 time = data(:,10);
 time = time - time(1);
