@@ -2,7 +2,7 @@ clc, clear variables
 addpath ..\99_fcn_bib\
 %%
 
-data = readmatrix('putty_09.log');
+data = readmatrix('putty_02.log');
 
 time = data(:,10) * 1e-3;
 time = time - time(1);
@@ -34,6 +34,7 @@ figure(3)
 tiledlayout_ = tiledlayout(3,1); tiledlayout_.TileSpacing = 'compact';
 ax(1) = nexttile;
 plot(ax(1), time, cumtrapz(time, data(:,ind_gyro)) * 180/pi), grid on, ylabel('Gyro Integral (deg)')
+
 ax(2) = nexttile;
 plot3(data(:,ind_acc(1)), data(:,ind_acc(2)), data(:,ind_acc(3)), 'k'), grid on, hold on
 ind = time > Teval(1,1) & time < Teval(1,2);
@@ -44,6 +45,7 @@ ind = time > Teval(3,1) & time < Teval(3,2);
 plot3(data(ind,ind_acc(1)), data(ind,ind_acc(2)), data(ind,ind_acc(3)), 'r'), hold off
 axis([-1 1 -1 1 -1 1] * 10), axis equal
 xlabel('x-Axis'), ylabel('y-Axis'), zlabel('z-Axis')
+
 ax(3) = nexttile;
 plot3(data(:,ind_mag(1)), data(:,ind_mag(2)), data(:,ind_mag(3)), 'k'), grid on, hold on
 ind = time > Teval(1,1) & time < Teval(1,2);

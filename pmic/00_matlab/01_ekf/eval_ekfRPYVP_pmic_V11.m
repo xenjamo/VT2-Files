@@ -1,4 +1,5 @@
-clc, clear all
+clc, clear variables
+addpath ..\99_fcn_bib\
 %%
 
 % addpath ../99_Matlab
@@ -168,8 +169,8 @@ gyr_acc_mag_rspos_rsyaw_lidar = [gyro(:,1:3), acc(:,1:3), mag(:,1:3), RS, RPY_RS
 Ymag = atan2(gyr_acc_mag_rspos_rsyaw_lidar(:,7), gyr_acc_mag_rspos_rsyaw_lidar(:,8));
 Ymag = unwrap(Ymag - Ymag0);
 
-ind_eval = 1:3;
-RPYint = cumtrapz(time, gyr_acc_mag_rspos_rsyaw_lidar(:,ind_eval) - 0*mean(gyr_acc_mag_rspos_rsyaw_lidar(time < Tmean,ind_eval)));
+ind = 1:3;
+RPYint = cumtrapz(time, gyr_acc_mag_rspos_rsyaw_lidar(:,ind) - 0*mean(gyr_acc_mag_rspos_rsyaw_lidar(time < Tmean,ind)));
 
 % gyr_acc_mag_rspos_rsyaw_lidar = gyr_acc_mag_rspos_rsyaw_lidar(1:14,:);
 % gyr_acc_mag_rspos_rsyaw_lidar(:,1)  = [  0.1,  0.5, -0.2,  0.2,  0.3,  0.2, -0.7,  0.5,  0.4, -0.3,  0.2,  0.8, -0.6,  0.2].';
@@ -206,13 +207,13 @@ RPYint = cumtrapz(time, gyr_acc_mag_rspos_rsyaw_lidar(:,ind_eval) - 0*mean(gyr_a
 % para.wrs_z = 2*pi*0.01;
 
 para.Ts = Ts;
-para.wg_xy = 2*pi*0.1*0;
-para.wg_z  = 2*pi*0.1*0;
+para.wg_xy = 2*pi*0.2
+para.wg_z  = 2*pi*0.2;
 para.g  = 9.81;
 para.kvx = 0.2;
 para.kvy = 0.2;
 para.wm = 2*pi*0.8;
-para.wa_xy = 2*pi*0.7;
+para.wa_xy = 2*pi*0.2;
 para.wa_z = 2*pi*0;
 para.wrs_psi = 2*pi*0.8;
 para.wfil = 2*pi*15;
@@ -221,104 +222,16 @@ para.nd_rspos = 2;
 para.wrs = 2*pi*4.0;
 para.wrs_z = 2*pi*0.01;
 
-% para.L0 = [0.2, 0.0, -0.01].';
-
 para.scale_P0 = 1e2;
 
-% % filter acc and mag (only in ESQRPY C++ version)
-% Gfaccmag = c2d(tf(1, [1/para.wfil 1]), Ts, 'tustin');
-% gyr_acc_mag_rspos_rsyaw_lidar(:,4:9) = filter(Gfaccmag.num{1}, Gfaccmag.den{1}, gyr_acc_mag_rspos_rsyaw_lidar(:,4:9), (1 - Gfaccmag.num{1}(1))*gyr_acc_mag_rspos_rsyaw_lidar(1,4:9));
-
-% complemetary filter for baro and RS_z
-
-% Glp_m = c2d(tf(1, [1/para.wcompfil 1]), Ts, 'tustin');
-% Ghp_m = 1 - Glp_m;
-% bf = Ts/(Ts + 2.0/para.wcompfil);
-% af = (Ts - 2.0/para.wcompfil)/(Ts + 2.0/para.wcompfil);
-% Glp = tf(bf*[1 1], [1 af], Ts);
-% Ghp = tf([1-bf af-bf], [1 af], Ts);
-% figure(88)
-% bode(Glp_m, Ghp_m, Glp, Ghp), grid on
-
-%
-
-multpFigNr = 2;
-
-% % [n_gyro; n_v; n_acc_z; n_pxy; n_pz; n_b_g; n_bacc_xy; n_b_az; n_b_m; n_b_rspsi]
-% var_fxn = [0.008*[1 1 10], 4*[1 1], 40, 1*[1 1], 1, 0.008*[1 1 10], [1 1], 1, 4*[1 1], 1];
-% % var_fxn = [0.008*[1 1 10], 4*[1 1], 40, 1*[1 1], 1, 0.008*[1 1 10], 1/0.14^2*[1 1], 1, 4*[1 1], 1];
-% % [n_acc; n_mag; n_rs]
-% var_gyn = [5.0*[1 1], 1.0*[1 1], 1.0*[1 1 1]];
-% rho = 0.8;
-
-% [n_gyro; n_v; n_acc_z; n_pxy; n_pz; n_b_g; n_bacc_xy; n_b_az; n_b_m; n_b_rspsi]
-% var_fxn = [0.008*[1 1 1], 2*[1 1], 2, 1*[1 1], 1, 0.008*[1 1 10], [1 1], 1, 4*[1 1], 1];
-% var_fxn = [0.008*[1 1 1], 6*[1 1], 20, 1*[1 1], 1, 0.008*[1 1 10], 3*[1 1], 10, 4*[1 1], 1];
+multpFigNr = 1;
 var_fxn = [0.01*[1 1 1], 10*[1 1], 20, 1*[1 1], 1, 0.02*[1 1 10], 1*[1 1], 10, 4*[1 1], 1];
-% var_fxn = [0.008*[1 1 1], 2*[1 1], 2, 1*[1 1], 1, 0.008*[1 1 10], 1/0.14^2*[1 1], 1, 4*[1 1], 1];
-% [n_acc; n_mag; n_rs]
 var_gyn = [5.0*[1 1], 1.0*[1 1], 3*[1 1 1]];
 rho = 0.1;
 
-% x_k = zeros(17,1);
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_17states_no_baro_vel_wrt_earth_delayed_01(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:17), var_gyn, mag0, rho);
-
-% [n_acc; n_rspsi; n_rs]
-var_gyn = [var_gyn(1:2), 1, var_gyn(5:7)];
-x_k = zeros(15,1);
-
-% % Nr.7
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_15states_no_baro_vel_wrt_earth_delayed_RSyaw(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:15), var_gyn, rho);
-
-% Nr.2
+x_k = zeros(17,1);
 [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-    ekf_RPYVP_15states_no_baro_vel_wrt_earth_delayed_RSyaw_acc_inp(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:15), var_gyn(3:6), rho);
-% % Nr.1
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_15states_no_baro_vel_wrt_body_delayed_RSyaw_acc_inp(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:15), var_gyn(3:6), rho);
-
-% % Nr.9
-% var_gyn(7) = 0.5;
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_15states_lidar_vel_wrt_earth_delayed_RSyaw_acc_inp(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:15), var_gyn(3:7), rho);
-
-% x_k = zeros(16,1);
-% var_fxn(16) = 2e1;
-% var_gyn(7) = 1.0;
-% % Nr.8
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_16states_lidar_g_vel_wrt_earth_delayed_RSyaw_acc_inp(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:16), var_gyn(3:7), rho);
-% % Nr.10
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_16states_lidar_b_vel_wrt_earth_delayed_RSyaw_acc_inp(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:16), var_gyn(3:7), rho);
-
-% return
-
-% % Nr.3
-% x_k = zeros(13,1);
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_13states_no_baro_vel_wrt_earth_delayed_RSyaw_acc_inp(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, [var_fxn(1:12), var_fxn(15)], var_gyn(3:6), rho);
-
-% % Nr.4
-% [n_gyro; n_v; n_acc_z; n_pxy; n_pz; n_b_g; n_bacc_xy; n_b_az; n_psif; n_pf]
-% x_k = zeros(19,1);
-% var_fxn(16) = 0.001;
-% var_fxn(17:19) = 0.001;
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_19states_no_baro_vel_wrt_earth_1ordmod_RSyaw_acc_inp(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn, var_gyn(3:6), rho);
-
-% % Nr.5
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_15states_no_baro_vel_wrt_earth_delayed_RSyaw_wind(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:15), var_gyn, rho);
-
-% % Nr.6
-% % [n_acc; n_rspsi; n_rs]
-% var_gyn = [var_gyn(1:2), 1, var_gyn(5:7)];
-% x_k = zeros(16,1);
-% [X_k, Kk, Q_k, R_k, P_k, F_k0, H_k0, P_svd_k, Q_k0, R_k0, P_k0, RPY_k, xi_k, Kmat_k] = ... 
-%     ekf_RPYVP_16states_no_baro_vel_wrt_earth_delayed_RSyaw_b_rsyaw(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, [var_fxn(1:15), var_fxn(18)], var_gyn, rho);
+    ekf_RPYVP_17states_no_baro_vel_wrt_earth_delayed_01(gyr_acc_mag_rspos_rsyaw_lidar, x_k, para, var_fxn(1:17), var_gyn, mag0, rho);
 
 % calculate OF with EKF altitude
 vOF(:,1) = (OF(:,1) + scale*(gyro(:,2) - X_k(:,11))).*X_k(:,9)./(cos(X_k(:,1)).*cos(X_k(:,2)));
