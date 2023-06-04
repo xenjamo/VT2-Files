@@ -37,7 +37,8 @@ addpath ..\99_fcn_bib\
 % data = readmatrix('putty_14.log'); % gyro and acc
 % data = readmatrix('putty_15.log'); % gyro, acc and mag
 % data = readmatrix('putty_19.log'); % gyro, acc and mag
-data = readmatrix('putty_20.log'); % gyro, acc and mag
+% data = readmatrix('putty_20.log'); % gyro, acc and mag, after Mahony adjustments
+data = readmatrix('putty_21.log'); % gyro, acc and mag, after Mahony adjustments
 
 time = data(:,10) * 1e-3;
 time = time - time(1);
