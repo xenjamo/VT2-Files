@@ -20,7 +20,9 @@ for i = 1:N
 
     acc_n = acc(i,:).';
     acc_n = acc_n ./ norm(acc_n);
-    e = cross(acc_n, g_n);
+    %e = cross(acc_n, g_n);
+    [ang, vn] = calcAngleBetween2Vectors(acc_n, g_n);
+    e = ang * vn;
     
     bias = bias + ki .* e * Ts;
 

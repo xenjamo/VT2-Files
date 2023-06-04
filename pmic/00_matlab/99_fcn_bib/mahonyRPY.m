@@ -37,13 +37,17 @@ for i = 1:N
 
     % by normalising here you adjust implicit the weight
     b = [norm(h); 0; 0];
-    e = CBE * cross(h, b);
+    %e = CBE * cross(h, b);
+    [ang, vn] = calcAngleBetween2Vectors(h, b);
+    e = norm(h) * CBE * ang * vn;
 
     g_n = CEB(3,:).';
 
     acc_n = acc(i,:).';
     acc_n = acc_n ./ norm(acc_n);
-    e = e + cross(acc_n, g_n);
+    %e = e + cross(acc_n, g_n);
+    [ang, vn] = calcAngleBetween2Vectors(acc_n, g_n);
+    e = e + ang * vn;
         
     bias = bias + ki .* e * Ts;
 

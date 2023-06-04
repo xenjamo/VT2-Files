@@ -35,7 +35,9 @@ addpath ..\99_fcn_bib\
 %%
 
 % data = readmatrix('putty_14.log'); % gyro and acc
-data = readmatrix('putty_15.log'); % gyro, acc and mag
+% data = readmatrix('putty_15.log'); % gyro, acc and mag
+% data = readmatrix('putty_19.log'); % gyro, acc and mag
+data = readmatrix('putty_20.log'); % gyro, acc and mag
 
 time = data(:,10) * 1e-3;
 time = time - time(1);
@@ -69,9 +71,14 @@ p = 2;         % pole at p rad/s
 kp = 2 * [p, p, p].';
 ki = kp.^2 / 3;
 
-% p = 7;         % pole at p rad/s
+% p = 2;         % pole at p rad/s
 % kp = 2 * [p, p, p].';
-% ki = kp.^2 / 3 * 0;
+% ki = kp.^2 / 3;
+
+% % no integrator
+% p = 2;
+% kp = [p, p, p].';
+% ki = [0, 0, 0].';
 
 para.kp = kp;
 para.ki = ki;

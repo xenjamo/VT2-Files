@@ -3,6 +3,8 @@ addpath ..\99_fcn_bib\
 %%
 
 % data = readmatrix('putty_07.log'); % before calibration
+% data = readmatrix('putty_08.log'); % after calibration
+% data = readmatrix('putty_16.log'); % before calibration
 data = readmatrix('putty_08.log'); % after calibration
 
 time = data(:,end) * 1e-3;
@@ -31,12 +33,12 @@ ax(1) = subplot(221);
 plot(mag), grid on
 title('uncalibrated')
 ax(2) = subplot(223);
-plot(sqrt(sum(mag.^2, 2))), grid on
+plot(sqrt(sum(mag.^2, 2))), grid on, ylim([0 1])
 ax(3) = subplot(222);
 plot(mag_calib), grid on
 title('calibrated')
 ax(4) = subplot(224);
-plot(sqrt(sum(mag_calib.^2, 2))), grid on
+plot(sqrt(sum(mag_calib.^2, 2))), grid on, ylim([0 1])
 linkaxes(ax, 'x'), clear ax
 xlim([0 size(mag, 1)])
 

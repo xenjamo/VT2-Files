@@ -2,7 +2,15 @@ clc, clear variables
 addpath ..\99_fcn_bib\
 %%
 
-data = readmatrix('putty_02.log');
+% data = readmatrix('putty_02.log');
+% Teval = [[ 2 3]; ...
+%          [ 5 7]; ...
+%          [ 9 10]];
+
+data = readmatrix('putty_18.log');
+Teval = [[ 4.30  5.12]; ...
+         [12.26 13.26]; ...
+         [19.78 20.38]];
 
 time = data(:,10) * 1e-3;
 time = time - time(1);
@@ -25,10 +33,6 @@ plot(ax(2), time, data(:,ind_acc)), grid on, ylabel('Acc (m/s^2)')
 ax(3) = nexttile;
 plot(ax(3), time, data(:,ind_mag)), grid on, ylabel('Mag'), xlabel('Time (sec)')
 linkaxes(ax, 'x'), clear ax, xlim([0, max(time)])
-
-Teval = [[ 2 3]; ...
-         [ 5 7]; ...
-         [ 9 10]];
 
 figure(3)
 tiledlayout_ = tiledlayout(3,1); tiledlayout_.TileSpacing = 'compact';
@@ -55,6 +59,7 @@ plot3(data(ind,ind_mag(1)), data(ind,ind_mag(2)), data(ind,ind_mag(3)), 'color',
 ind = time > Teval(3,1) & time < Teval(3,2);
 plot3(data(ind,ind_mag(1)), data(ind,ind_mag(2)), data(ind,ind_mag(3)), 'r'), hold off
 axis([-1 1 -1 1 -1 1] * 0.5), axis equal
+xlabel('x-Axis'), ylabel('y-Axis'), zlabel('z-Axis')
 
 data_spectras = data(:,[ind_gyro, ind_acc, ind_mag]);
 data_spectras = data_spectras - mean(data_spectras);
