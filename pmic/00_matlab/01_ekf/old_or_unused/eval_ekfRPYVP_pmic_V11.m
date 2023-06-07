@@ -6,7 +6,7 @@ addpath ..\99_fcn_bib\
 % addpath ../21_Measurements/20220714
 
 % data = read_bin_data('log_40805.bin');
-load log_40805.mat %  save log_40805 data
+load ..\log_40805.mat %  save log_40805 data
 Teval = [0.02 inf];
 
 data.time = data.ti; data = rmfield( data , 'ti');

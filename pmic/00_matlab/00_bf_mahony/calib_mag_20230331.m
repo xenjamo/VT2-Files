@@ -2,12 +2,10 @@ clc, clear variables
 addpath ..\99_fcn_bib\
 %%
 
-% data = readmatrix('putty_07.log'); % before calibration
-% data = readmatrix('putty_08.log'); % after calibration
-% data = readmatrix('putty_16.log'); % before calibration
-data = readmatrix('putty_08.log'); % after calibration
+data = readmatrix('putty_16.log'); % before calibration
+% data = readmatrix('putty_17.log'); % after calibration
 
-time = data(:,end) * 1e-3;
+time = data(:,10) * 1e-3;
 time = time - time(1);
 data = data(:,1:end-1);
 Ts = median(diff(time));
