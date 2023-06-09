@@ -7,8 +7,8 @@ clear all, clc, close all
 % filename = '005.bin'; % broken
 % filename = '006.bin'; % broken
 % filename = '007.bin'; % X motion with stops
-% filename = '008.bin'; % running around
-filename = '009.bin'; % disabling RTK stationary (mostly)
+filename = '008.bin'; % running around
+% filename = '009.bin'; % disabling RTK stationary (mostly)
 % filename = '010.bin'; % disabling RTK moving (moving to force RTK loss)
 
 %% read file
@@ -91,8 +91,8 @@ K_vel = [velCovNN, velCovNE, velCovND, velCovEE, velCovED, velCovDD];
 
 DOP = A(:,30:36);
 
-relposNEU = [A(:,37), A(:,38), -A(:,39)];
-relaccNEU = [A(:,40), A(:,41), A(:,42)];
+relposNED = [A(:,37), A(:,38), A(:,39)];
+relaccNED = [A(:,40), A(:,41), A(:,42)];
 
 hMSL = A(:,43);
 hAcc = A(:,44);
@@ -113,7 +113,7 @@ hpllh = A2(:,1:3);
 save data.mat n t itow ttff msss rtk_flags...
      gnss_fix fix_type numSV lastCorrectionAge...
      gyro accel mag quat rpy K_pos K_vel...
-     DOP relposNEU relaccNEU hMSL hAcc vAcc...
+     DOP relposNED relaccNED hMSL hAcc vAcc...
      relvelNED sAcc gSpeed headMot headAcc magDec magAcc hpllh
 
 %% plots
@@ -198,24 +198,24 @@ xlim([t0, tend])
 grid on;
 %%
 figure(7);
-plot(relposNEU(:,2),relposNEU(:,1), '.-');
+plot(relposNED(:,2),relposNED(:,1), '.-');
 title("RELPOS")
 grid on;
 
 figure(8);
 subplot(311);
-plot(t, relposNEU(:,1))
+plot(t, relposNED(:,1))
 title("relposN");
 xlim([t0 tend])
 grid on;
 subplot(312);
-plot(t, relposNEU(:,2))
+plot(t, relposNED(:,2))
 title("relposE");
 xlim([t0 tend])
 grid on;
 subplot(313);
-plot(t, relposNEU(:,3))
-title("relposU");
+plot(t, relposNED(:,3))
+title("relposD");
 xlim([t0 tend])
 grid on;
 
@@ -301,7 +301,7 @@ plot(t,hAcc);
 figure(15)
 % polarplot(heading, gSpeed,'.')
 plot(t, headMot)
-title("Ground Speed")
+title("headMot")
 grid on;
 %%
 figure(16);
