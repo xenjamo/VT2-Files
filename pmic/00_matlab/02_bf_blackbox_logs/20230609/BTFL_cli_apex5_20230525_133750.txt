@@ -1,0 +1,193 @@
+diff all
+
+# version
+# Betaflight / STM32H743 (SH74) 4.5.0 May 25 2023 / 11:29:58 (aedff1a25) MSP API: 1.46
+
+# start the command batch
+batch start
+
+# reset configuration to default settings
+defaults nosave
+
+board_name MATEKH743
+manufacturer_id MTKS
+mcu_id 0019002a3130511633323335
+signature 
+
+# name: apex5
+
+# feature
+feature GPS
+feature TELEMETRY
+feature OSD
+
+# serial
+serial 1 2 115200 115200 0 115200
+serial 3 131073 115200 57600 0 115200
+serial 6 128 115200 57600 0 2000000
+
+# mixer
+mmix 0  1.000 -1.000  0.749 -1.000
+mmix 1  1.000 -1.000 -0.749  1.000
+mmix 2  1.000  1.000  0.749  1.000
+mmix 3  1.000  1.000 -0.749 -1.000
+
+# aux
+aux 0 0 0 1900 2100 0 0
+aux 1 1 2 1900 2100 0 0
+aux 2 2 2 900 1100 0 0
+aux 3 27 4 1900 2100 1 0
+aux 4 27 0 1900 2100 1 0
+aux 5 27 1 1900 2100 1 0
+aux 6 54 3 1900 2100 1 0
+aux 7 54 0 1900 2100 1 0
+aux 8 13 5 1900 2100 1 0
+aux 9 13 0 900 1100 1 0
+aux 10 26 5 1900 2100 1 0
+aux 11 26 0 1900 2100 1 0
+aux 12 35 3 900 1100 1 0
+aux 13 35 0 1900 2100 1 0
+aux 14 36 1 1900 2100 0 0
+
+# master
+set gyro_lpf1_static_hz = 0
+set gyro_lpf2_static_hz = 600
+set gyro_notch1_hz = 109
+set gyro_notch1_cutoff = 98
+set gyro_notch2_hz = 152
+set gyro_notch2_cutoff = 137
+set dyn_notch_count = 2
+set dyn_notch_q = 500
+set dyn_notch_min_hz = 90
+set gyro_lpf1_dyn_min_hz = 0
+set gyro_lpf1_dyn_max_hz = 0
+set acc_calibration = -57,9,175,1
+set rssi_channel = 12
+set blackbox_device = SERIAL
+set blackbox_high_resolution = ON
+set dshot_bidir = ON
+set failsafe_switch_mode = STAGE2
+set failsafe_procedure = GPS-RESCUE
+set small_angle = 180
+set gps_ublox_use_galileo = ON
+set gps_rescue_allow_arming_without_fix = ON
+set yaw_deadband = 5
+set simplified_gyro_filter = OFF
+set osd_warn_bitmask = 16253
+set osd_alt_alarm = 130
+set osd_vbat_pos = 357
+set osd_rssi_pos = 2610
+set osd_link_quality_pos = 408
+set osd_rssi_dbm_pos = 161
+set osd_tim_1_pos = 353
+set osd_tim_2_pos = 321
+set osd_flymode_pos = 2588
+set osd_throttle_pos = 337
+set osd_vtx_channel_pos = 161
+set osd_craft_name_pos = 399
+set osd_gps_speed_pos = 2652
+set osd_gps_lon_pos = 3201
+set osd_gps_lat_pos = 2194
+set osd_gps_sats_pos = 3589
+set osd_home_dir_pos = 2269
+set osd_home_dist_pos = 3622
+set osd_flight_dist_pos = 366
+set osd_compass_bar_pos = 235
+set osd_altitude_pos = 2642
+set osd_pidrate_profile_pos = 3654
+set osd_warnings_pos = 2458
+set osd_avg_cell_voltage_pos = 2578
+set osd_disarmed_pos = 2619
+set osd_esc_tmp_pos = 291
+set osd_rtc_date_time_pos = 385
+set osd_flip_arrow_pos = 174
+set osd_core_temp_pos = 248
+set osd_log_status_pos = 97
+set osd_efficiency_pos = 231
+set osd_displayport_device = MSP
+set osd_canvas_width = 60
+set osd_canvas_height = 22
+set debug_mode = CHIRP
+set vcd_video_system = HD
+set rpm_filter_q = 600
+set rpm_filter_min_hz = 110
+set rpm_filter_fade_range_hz = 30
+set craft_name = apex5
+set pilot_name = pichim
+
+profile 0
+
+# profile 0
+set dterm_lpf1_dyn_min_hz = 0
+set dterm_lpf1_dyn_max_hz = 0
+set dterm_lpf1_dyn_expo = 10
+set dterm_lpf1_static_hz = 0
+set dterm_lpf2_type = PT2
+set dterm_lpf2_static_hz = 130
+set vbat_sag_compensation = 80
+set anti_gravity_gain = 120
+set iterm_relax_cutoff = 10
+set pidsum_limit = 800
+set pidsum_limit_yaw = 600
+set yaw_lowpass_hz = 0
+set p_pitch = 45
+set i_pitch = 66
+set d_pitch = 29
+set f_pitch = 0
+set p_roll = 37
+set i_roll = 64
+set d_roll = 25
+set f_roll = 0
+set p_yaw = 24
+set i_yaw = 63
+set f_yaw = 0
+set d_min_roll = 25
+set d_min_pitch = 29
+set thrust_linear = 40
+set feedforward_smooth_factor = 15
+set feedforward_jitter_factor = 9
+set feedforward_boost = 2
+set dyn_idle_min_rpm = 25
+set simplified_pids_mode = OFF
+set simplified_dterm_filter = OFF
+set tpa_rate = 35
+set tpa_breakpoint = 1400
+
+profile 1
+
+profile 2
+
+profile 3
+
+# restore original profile selection
+profile 0
+
+rateprofile 0
+
+# rateprofile 0
+set thr_mid = 20
+set thr_expo = 30
+set roll_rc_rate = 18
+set pitch_rc_rate = 18
+set yaw_rc_rate = 18
+set roll_expo = 70
+set pitch_expo = 70
+set yaw_expo = 63
+set roll_srate = 70
+set pitch_srate = 70
+set yaw_srate = 60
+set throttle_limit_type = SCALE
+set throttle_limit_percent = 80
+
+rateprofile 1
+
+rateprofile 2
+
+rateprofile 3
+
+# restore original rateprofile selection
+rateprofile 0
+
+# save configuration
+save
+# 
