@@ -35,9 +35,12 @@ fclose(fid);                        % close file
 data = A(:,1:9);
 
 acc = data(1:350,4:6);
-acc_mean = mean(acc);
+[acc_dev, acc_mean] = std(acc);
 b_acc = [acc_mean(:,1:2),0];
 acc_calib = acc - b_acc;
+% acc_dev = 0.004879771823504,   0.004323229867404,   0.006564916157247
+
+%%
 
 figure(1)
 ax(1) = subplot(221);
