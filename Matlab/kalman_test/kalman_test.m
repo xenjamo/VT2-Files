@@ -50,7 +50,7 @@ quat0 = rpy2quat(rpy0).';
 rpyRP  = quat2rpy(quatRP );
 rpyRPY = quat2rpy(quatRPY);
 
-figure(5);
+figure(6);
 plot(t,rpyRPY);
 title("rpyRPY")
 grid on;
@@ -99,14 +99,13 @@ plot(t,data_age*Ts); grid on;
 title('time since last update')
 %% 1d test
 % acc_dev = 0.004879771823504,   0.004323229867404,   0.006564916157247
-% there has to be a better way
 g = 9.81;
 
 Ac = [0 1 0; ...
      0 0 -1; ...
      0 0 0];
 Bc = [0 1 0]';
-Cc = [1 1 0];
+Cc = [1 0 0;0 1 0];
 Dc = 0;
 
 sys = ss(Ac,Bc,Cc,Dc);
@@ -122,7 +121,7 @@ x = x0_hat; % zeros(3,1);
 u = accel_ENU(:,3);
 y = [hpllh(:,3),-relvelNED(:,3)];
 
-P_ = zeros(3,3);
+P_ = eye(3,3);
 P = zeros([size(x_hat),3]);
 
 var_gps = K_pos(:,6);
@@ -130,15 +129,15 @@ var_vel = K_vel(:,6);
 var_acc = 0.006564916157247;
 
 R = [var_gps, var_vel] / Ts;
-Q = Bd * Bd.' * var_acc * Ts;
+Q = Bc * Bc.' * var_acc * Ts;
 Q(3,3) = 1 * Ts;
 
 for i = 1:m
-    x = Ad * x + Bd * (u(i)-mean(u));
+    x = Ad * x + Bd * (u(i)-g);
     P_ = Ad*P_*Ad' + Q;
     
     if data_age(i) == 0
-        e = y(i) - Cd * x;
+        e = y(i,:)' - Cd * x;
         S = Cd*P_*Cd' + R(i);
         K = P_* Cd' / S;
         x = x + K * e;
@@ -165,7 +164,7 @@ plot(t,P(:,2,2)); hold off;
 grid on; title('covpos/covvel'); legend({'covpos', 'covvel'}, 'location', 'best')
 %% hpposllh
 figure(14)
-plot(hpllh(:,1), hpllh(:,2), '.');
+plot3(hpllh(:,1),hpllh(:,2),hpllh(:,3), '.');
 title("hpllh")
 grid on;
 
@@ -180,13 +179,3 @@ grid on;
 subplot(212)
 plot(t, gSpeed); grid on
 title("gSpeed")
-
-figure(16)
-subplot(211)
-plot(t,hpllh(:,3))
-title("height")
-grid on;
-subplot(212)
-plot(t,-relvelNED(:,3))
-title("dheight")
-grid on;
