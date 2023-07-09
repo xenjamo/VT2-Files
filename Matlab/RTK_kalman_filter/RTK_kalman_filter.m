@@ -1,7 +1,7 @@
 clc, clear all
 %%
 addpath('lib');
-load mat_files/data_015.mat
+load mat_files/data_014.mat
 
 A_mag = [ 0.9821680,  0.0000000,  0.0000000;
           0.0159774,  0.9866579,  0.0000000;
@@ -132,7 +132,7 @@ Ac = [0 1 0; ...
      0 0 -1; ...
      0 0 0];
 Bc = [0 1 0]';
-Cc = [1 0 0;0 1 0];
+Cc = [1 0 0; 0 1 0];
 Dc = 0;
 
 sys = ss(Ac,Bc,Cc,Dc);
@@ -144,7 +144,9 @@ Dd = Dc;
 
 A = [Ad, zeros(3,6); zeros(3,3), Ad, zeros(3,3); zeros(3,6), Ad];
 B = [Bd, zeros(3,2); zeros(3,1), Bd, zeros(3,1); zeros(3,2), Bd];
-C = [Cd, zeros(2,6); zeros(2,3), Cd, zeros(2,3); zeros(2,6), Cd];
+C = [Cd, zeros(size(Cd)), zeros(size(Cd));...
+     zeros(size(Cd)), Cd, zeros(size(Cd));...
+     zeros(size(Cd)), zeros(size(Cd)), Cd];
 D = Dd;
 
 x0_hat = [pos_nwu(1,1),  relvelNED(1,1) , 0,...
@@ -153,12 +155,13 @@ x0_hat = [pos_nwu(1,1),  relvelNED(1,1) , 0,...
 x_hat = zeros(m,9);
 x = x0_hat; % zeros(3,1);
 u = accel_M;
-y = [pos_nwu(:,1),relvelNED(:,1),pos_nwu(:,2),relvelNED(:,2),pos_nwu(:,3),-relvelNED(:,3)];
+y = [pos_nwu(:,1),relvelNED(:,1),pos_nwu(:,2),-relvelNED(:,2),pos_nwu(:,3),-relvelNED(:,3)];
+% y = [pos_nwu(:,1),pos_nwu(:,2),pos_nwu(:,3)];
 
 pos_nwu_kf = zeros(size(pos_nwu));
 vel_nwu_kf = zeros(size(relvelNED));
 
-P_ = zeros(9,9);
+P_ = ones(9,9);
 P = zeros([size(x_hat),9]);
 
 % var_gps = [hAcc.^2, hAcc.^2, vAcc.^2];
@@ -180,6 +183,7 @@ for i = 1:m
     
     if data_age(i) == 0
         R = diag([var_gps(i,1), var_vel(i,1), var_gps(i,2), var_vel(i,2), var_gps(i,3), var_vel(i,3)]);
+        %R = diag([var_gps(i,1), var_gps(i,2), var_gps(i,3)]);
         e = y(i,:)' - C * x;
         S = C*P_*C' + R;
         K = P_* C' / S;
@@ -238,7 +242,7 @@ grid on; title('covpos/covvel u Ublox'); legend({'covpos', 'covvel'}, 'location'
 %% hpposllh
 figure(14)
 plot3(-pos_nwu(:,2),pos_nwu(:,1),pos_nwu(:,3), '.'); hold on;
-plot3(-pos_nwu_kf(:,2),pos_nwu_kf(:,1),pos_nwu_kf(:,3)); hold off;
+plot3(-pos_nwu_kf(:,2),pos_nwu_kf(:,1),pos_nwu_kf(:,3),'-'); hold off;
 axis equal, title("nwu"); xlabel('w'); ylabel('n'); zlabel('u')
 grid on;
 

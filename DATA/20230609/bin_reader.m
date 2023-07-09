@@ -6,7 +6,7 @@ loc = 'bin_files/';
 % filename = '003.bin' % under bridge;
 % filename = '004.bin' % broken;
 % filename = '005.bin' % mag calib file;
-filename = '006.bin' % general flight;
+% filename = '006.bin' % general flight;
 % filename = '007.bin' % line walk;
 % filename = '008.bin' % line walk;
 % filename = '011.bin' % Roll Pitch Yaw;
@@ -16,7 +16,7 @@ filename = '006.bin' % general flight;
 % filename = '016.bin' % XYZ;
 % filename = '017.bin' % chirp;
 % filename = '018.bin' % acro;
-% filename = '020.bin' % acro;
+filename = '020.bin' % acro;
 % filename = '021.bin' % acro;
 % filename = '022.bin' % acro;
 
