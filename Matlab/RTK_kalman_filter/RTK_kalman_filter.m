@@ -1,7 +1,7 @@
 clc, clear all
 %%
 addpath('lib');
-load mat_files/data_014.mat
+load mat_files/data_020.mat
 
 A_mag = [ 0.9821680,  0.0000000,  0.0000000;
           0.0159774,  0.9866579,  0.0000000;
@@ -12,6 +12,28 @@ mag_calib = (mag - b_mag)*A_mag.';
 tend = t(end-1);
 t = t - t(1);
 Ts = median(diff(t));
+
+%% get bf data
+mat_name = 'mat_files/data_20230609_bf_020';
+% mat_name = 'data_20230609_bf_021';
+% mat_name = 'data_20230609_bf_022';
+
+[ind, gyro_bf, acc_bf, mag_bf] = get_ind_and_synched_bf_data_20230609(gyro, mat_name);
+
+
+% uncomment if working with bf data
+t = t(ind,:);
+% gyro = gyro(ind,:);
+% accel = accel(ind,:);
+gyro = gyro_bf;
+accel = acc_bf;
+rtk_flags = rtk_flags(ind,:);
+relvelNED = relvelNED(ind,:);
+hpllh = hpllh(ind,:);
+K_pos = K_pos(ind,:);
+K_vel = K_vel(ind,:);
+
+
 
 %% orientation
 
@@ -27,7 +49,8 @@ rpy0 = 0 * [60, -60, 0] * 180/pi;
 quat0 = rpy2quat(rpy0).';
 
 [quatRP , biasRP ] = mahonyRP (gyro, accel, para, Ts, quat0);
-[quatRPY, biasRPY] = mahonyRPY(gyro, accel, mag, para, Ts, quat0);
+% [quatRPY, biasRPY] = mahonyRPY(gyro, accel, mag_calib, para, Ts, quat0);
+[quatRPY, biasRPY] = mahonyRPY(gyro_bf, acc_bf, mag_bf, para, Ts, quat0);
 
 rpyRP  = quat2rpy(quatRP );
 rpyRPY = quat2rpy(quatRPY);
@@ -40,7 +63,7 @@ grid on;
 %% rotation
 % acc_dev = 0.004879771823504,   0.004323229867404,   0.006564916157247
 % 006 start angle 5.3965 rad / -2.70344
-[m,n] = size(accel);
+[m,n] = size(accel(ind,:));
 accel_M = zeros(m,n);
 accel_ENU = zeros(m,n);
 m_d = -3.36*pi/180; %magnetic declination
@@ -174,6 +197,7 @@ var_acc = diag([0 1 0 0 1 0 0 1 0] * 0.006564916157247);
 % R(:,3,3) = var_gps(:,2); R(:,4,4) = var_vel(:,2);
 % R(:,5,5) = var_gps(:,3); R(:,6,6) = var_vel(:,3);
 % R = [K_pos(:,1), K_vel(:,1), K_pos(:,4), K_vel(:,4), K_pos(:,6), K_vel(:,6)] / Ts;
+
 Q = B * B.' * var_acc * Ts;
 Q(3,3) = 1 * Ts; Q(6,6) = 1 * Ts; Q(9,9) = 1 * Ts;
 
@@ -182,8 +206,14 @@ for i = 1:m
     P_ = A*P_*A' + Q;
     
     if data_age(i) == 0
-        R = diag([var_gps(i,1), var_vel(i,1), var_gps(i,2), var_vel(i,2), var_gps(i,3), var_vel(i,3)]);
-        %R = diag([var_gps(i,1), var_gps(i,2), var_gps(i,3)]);
+        R = [K_pos(i,1), 0, K_pos(i,2), 0, K_pos(i,3), 0;...
+             0 K_vel(i,1), 0 , K_vel(i,2), 0, K_vel(i,3);...
+             K_pos(i,2), 0, K_pos(i,4), 0, K_pos(i,5), 0;...
+             0 K_vel(i,2), 0 , K_vel(i,4), 0, K_vel(i,5);...
+             K_pos(i,3), 0, K_pos(i,5), 0, K_pos(i,6), 0;...
+             0 K_vel(i,3), 0 , K_vel(i,5), 0, K_vel(i,6)] / Ts;
+        % R = diag([var_gps(i,1), var_vel(i,1), var_gps(i,2), var_vel(i,2), var_gps(i,3), var_vel(i,3)]) / Ts;
+        % R = diag([var_gps(i,1), var_gps(i,2), var_gps(i,3)]) / Ts;
         e = y(i,:)' - C * x;
         S = C*P_*C' + R;
         K = P_* C' / S;
@@ -257,3 +287,5 @@ grid on;
 % subplot(212)
 % plot(t, gSpeed); grid on
 % title("gSpeed")
+%% 
+
