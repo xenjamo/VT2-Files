@@ -2,7 +2,7 @@ clear all, clc, close all
 %% INDEX
 loc = 'bin_files/';
 % filename = '001.bin' % under bridge;
-% filename = '002.bin' % under bridge;
+filename = '002.bin' % under bridge;
 % filename = '003.bin' % under bridge;
 % filename = '004.bin' % broken;
 % filename = '005.bin' % mag calib file;
@@ -16,7 +16,7 @@ loc = 'bin_files/';
 % filename = '016.bin' % XYZ;
 % filename = '017.bin' % chirp;
 % filename = '018.bin' % acro;
-filename = '020.bin' % acro;
+% filename = '020.bin' % acro;
 % filename = '021.bin' % acro;
 % filename = '022.bin' % acro;
 
@@ -96,10 +96,10 @@ relvelNED = [A(:,46), A(:,47), A(:,48)];
 
 sAcc = A(:,49);
 gSpeed = A(:,50);
-headMot = A(:,51)*pi/180;
-headAcc = A(:,52)*pi/180;
-magDec = A(:,53)*pi/180;
-magAcc = A(:,54)*pi/180;
+headMot = A(:,51) * pi/180;
+headAcc = A(:,52) * pi/180;
+magDec = A(:,53) * pi/180;
+magAcc = A(:,54) * pi/180;
 
 hpllh = A2(:,1:3);
 
