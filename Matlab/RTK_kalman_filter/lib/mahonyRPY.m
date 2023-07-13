@@ -25,23 +25,18 @@ for i = 1:N
     h = CEB * mag_n; % Cmu.' * CEB = (CEB.' * Cmu).' = = (CBE * Cmu).'
     h(3) = 0;
 
-%     % by normalising here you adjust implicit the weigth
-%     if i == 1
-%         h_norm_init = norm(h);
-%     end
-%     b = [1; 0; 0];
-%     e = CBE * cross(h * h_norm_init / norm(h), b);
-%     b = [1; 0; 0];
-%     e = CBE * cross(h/norm(h), b);
+    % b = [1; 0; 0];
+    % e = CBE * cross(h/norm(h), b);
+    
     % by normalising here you adjust implicit the weigth
     b = [norm(h); 0; 0];
-    e = CBE * cross(h, b);
+    e = CBE * cross(h, b); % e_heading = CBE * cross(h, b);
 
     g_n = CEB(3,:).';
 
     acc_n = acc(i,:).';
     acc_n = acc_n ./ norm(acc_n);
-    e = e + cross(acc_n, g_n);
+    e = e + cross(acc_n, g_n); % e_level = cross(acc_n, g_n)
         
     bias = bias + ki .* e * Ts;
 
@@ -50,6 +45,7 @@ for i = 1:N
          [ quat(4),  quat(1), -quat(2)]; ...
          [-quat(3),  quat(2),  quat(1)]];
 
+    % dquat = Ts * 0.5 * Q * ( gyro(i,:).' + bias + kp_level .* e_level + kp_heading .* e_heading);
     dquat = Ts * 0.5 * Q * ( gyro(i,:).' + bias + kp .* e );
     quat = quat + dquat;
     quat = quat ./ norm(quat);
