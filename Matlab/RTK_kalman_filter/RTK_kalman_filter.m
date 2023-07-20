@@ -1,7 +1,7 @@
 clc, clear all
 %%
 addpath('lib');
-load mat_files/data_006.mat
+load mat_files/data_014.mat
 
 % A_mag =
     % 0.9822         0         0
@@ -337,18 +337,16 @@ plot(t, x_hat(:,[3 6 9])), grid on, title('acc bias'); legend
 % subplot(313) plot(t,x_hat(:,9)); grid on; title('acc bias u');
 
 figure(132)
-subplot(311)
+subplot(211)
 plot(t,P(:,1,1)); hold on;
-plot(t,P(:,2,2)); hold off;
-grid on; title('covpos/covvel n'); legend({'covpos', 'covvel'}, 'location', 'best')
-subplot(312)
-plot(t,P(:,4,4)); hold on;
-plot(t,P(:,5,5)); hold off;
-grid on; title('covpos/covvel w'); legend({'covpos', 'covvel'}, 'location', 'best')
-subplot(313)
-plot(t,P(:,7,7)); hold on;
+plot(t,P(:,4,4));
+plot(t,P(:,7,7));hold off;
+grid on; title('covpos');
+subplot(212)
+plot(t,P(:,2,2)); hold on;
+plot(t,P(:,5,5)); 
 plot(t,P(:,8,8)); hold off;
-grid on; title('covpos/covvel u'); legend({'covpos', 'covvel'}, 'location', 'best')
+grid on; title('covvel');
 
 figure(133)
 subplot(211)
