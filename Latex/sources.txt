@@ -1,3 +1,0 @@
-https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)
-https://github.com/ArduPilot/ardupilot/blob/master/ArduCopter/config.h
-https://github.com/ArduPilot/ardupilot
